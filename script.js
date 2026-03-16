@@ -1,10 +1,12 @@
 const cursor = document.getElementById('cursor');
 const folder = document.getElementById('folder');
-const folderContent = document.getElementById('folderContent');
-const rePoster = document.getElementById('rePoster');
 const claimCard = document.getElementById('claimCard');
 const claimButton = document.getElementById('claimButton');
 const particles = document.getElementById('particles');
+const backButton = document.getElementById('backButton');
+const header = document.getElementById('header');
+
+let animationComplete = false;
 
 function createParticles() {
     for (let i = 0; i < 20; i++) {
@@ -53,37 +55,13 @@ async function startAnimation() {
     folder.style.opacity = '0';
     folder.style.transition = 'all 0.5s ease';
 
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    folderContent.classList.add('active');
-
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    const posterRect = rePoster.getBoundingClientRect();
-    const posterCenterX = posterRect.left + posterRect.width / 2;
-    const posterCenterY = posterRect.top + posterRect.height / 2;
-
-    await moveCursor(posterCenterX - 15, posterCenterY - 15, 1000);
-
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    rePoster.classList.add('lifting');
-
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    rePoster.classList.add('glass-effect');
-
     await new Promise(resolve => setTimeout(resolve, 1000));
-    await clickAnimation();
-
-    folderContent.style.transition = 'all 0.5s ease';
-    folderContent.style.opacity = '0';
-    folderContent.style.transform = 'translate(-50%, -50%) scale(0.8)';
-
-    await new Promise(resolve => setTimeout(resolve, 500));
 
     createParticles();
     claimCard.classList.add('active');
+    header.classList.add('active');
+    backButton.style.opacity = '1';
+    backButton.style.pointerEvents = 'auto';
 
     const cardCenterX = window.innerWidth / 2;
     const cardCenterY = window.innerHeight / 2;
@@ -92,10 +70,29 @@ async function startAnimation() {
 
     cursor.style.transition = 'opacity 0.5s ease';
     cursor.style.opacity = '0';
+
+    animationComplete = true;
 }
 
 claimButton.addEventListener('click', () => {
     window.open('https://linkpays.in/og6mqxm', '_blank');
+});
+
+backButton.addEventListener('click', () => {
+    if (animationComplete) {
+        folder.style.transform = 'translate(-50%, -50%) scale(1)';
+        folder.style.opacity = '1';
+        claimCard.classList.remove('active');
+        header.classList.remove('active');
+        backButton.style.opacity = '0';
+        backButton.style.pointerEvents = 'none';
+        cursor.style.opacity = '0';
+        animationComplete = false;
+
+        setTimeout(() => {
+            startAnimation();
+        }, 1500);
+    }
 });
 
 window.addEventListener('load', () => {

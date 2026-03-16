@@ -1,5 +1,6 @@
 const cursor = document.getElementById('cursor');
 const folder = document.getElementById('folder');
+const rePoster = document.getElementById('rePoster');
 const claimCard = document.getElementById('claimCard');
 const claimButton = document.getElementById('claimButton');
 const particles = document.getElementById('particles');
@@ -55,11 +56,30 @@ async function startAnimation() {
     folder.style.opacity = '0';
     folder.style.transition = 'all 0.5s ease';
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    header.classList.add('active');
+    rePoster.classList.add('active');
+
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    const posterRect = rePoster.getBoundingClientRect();
+    const posterCenterX = posterRect.left + posterRect.width / 2;
+    const posterCenterY = posterRect.top + posterRect.height / 2;
+
+    await moveCursor(posterCenterX - 15, posterCenterY - 15, 1000);
+
+    await new Promise(resolve => setTimeout(resolve, 300));
+    await clickAnimation();
+
+    rePoster.style.opacity = '0';
+    rePoster.style.pointerEvents = 'none';
+    rePoster.style.transition = 'all 0.5s ease';
+
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     createParticles();
     claimCard.classList.add('active');
-    header.classList.add('active');
     backButton.style.opacity = '1';
     backButton.style.pointerEvents = 'auto';
 
@@ -78,15 +98,23 @@ claimButton.addEventListener('click', () => {
     window.open('https://linkpays.in/og6mqxm', '_blank');
 });
 
+rePoster.addEventListener('click', () => {
+    if (!animationComplete) return;
+});
+
 backButton.addEventListener('click', () => {
     if (animationComplete) {
         folder.style.transform = 'translate(-50%, -50%) scale(1)';
         folder.style.opacity = '1';
+        rePoster.classList.remove('active');
+        rePoster.style.opacity = '1';
+        rePoster.style.pointerEvents = 'auto';
         claimCard.classList.remove('active');
         header.classList.remove('active');
         backButton.style.opacity = '0';
         backButton.style.pointerEvents = 'none';
         cursor.style.opacity = '0';
+        particles.innerHTML = '';
         animationComplete = false;
 
         setTimeout(() => {

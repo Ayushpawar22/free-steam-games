@@ -1,0 +1,399 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    background: #0a0a0a;
+}
+
+.desktop {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.desktop::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(100, 100, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.folder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 10;
+}
+
+.folder-icon {
+    width: 120px;
+    height: 120px;
+    color: #ffd700;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.6));
+    animation: folderGlow 2s ease-in-out infinite;
+}
+
+@keyframes folderGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.6));
+    }
+    50% {
+        filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.9));
+    }
+}
+
+.folder-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.folder-label {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+.folder-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 90%;
+    max-width: 1200px;
+    background: rgba(20, 20, 40, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 40px;
+    opacity: 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    z-index: 20;
+}
+
+.folder-content.active {
+    animation: folderOpen 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes folderOpen {
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.game-poster {
+    position: relative;
+    aspect-ratio: 2/3;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    background: linear-gradient(135deg, #1a1a2e, #2a2a3e);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.game-poster:hover img {
+    transform: scale(1.1);
+}
+
+.poster-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+}
+
+.game-poster.lifting {
+    animation: posterLift 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    z-index: 100;
+}
+
+@keyframes posterLift {
+    0% {
+        transform: translateY(0) scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: translateY(-80px) scale(1.3);
+        filter: brightness(1.5);
+    }
+    100% {
+        transform: translateY(-80px) scale(1.3);
+        filter: brightness(1.5);
+    }
+}
+
+.game-poster.glass-effect {
+    animation: glassTransform 1s ease-in-out forwards;
+    animation-delay: 1.5s;
+}
+
+@keyframes glassTransform {
+    0% {
+        filter: brightness(1.5);
+        box-shadow: 0 0 20px rgba(100, 200, 255, 0.3);
+    }
+    50% {
+        filter: brightness(2) saturate(1.5) hue-rotate(10deg);
+        box-shadow:
+            0 0 40px rgba(0, 200, 255, 0.8),
+            0 0 80px rgba(150, 0, 255, 0.6),
+            inset 0 0 30px rgba(255, 255, 255, 0.3);
+        border-color: rgba(0, 200, 255, 0.8);
+    }
+    100% {
+        filter: brightness(1.8) saturate(1.3);
+        box-shadow:
+            0 0 60px rgba(0, 200, 255, 0.9),
+            0 0 100px rgba(150, 0, 255, 0.7),
+            inset 0 0 40px rgba(255, 255, 255, 0.2);
+        border-color: rgba(100, 150, 255, 0.9);
+    }
+}
+
+.claim-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 500px;
+    max-width: 90%;
+    background: rgba(15, 15, 30, 0.95);
+    backdrop-filter: blur(30px);
+    border-radius: 25px;
+    padding: 50px 40px;
+    opacity: 0;
+    border: 2px solid rgba(100, 150, 255, 0.5);
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.9),
+        0 0 100px rgba(0, 200, 255, 0.4),
+        inset 0 0 60px rgba(100, 150, 255, 0.1);
+    z-index: 200;
+}
+
+.claim-card.active {
+    animation: cardAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes cardAppear {
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 200, 255, 0.3) 0%, transparent 50%);
+    animation: glowPulse 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.card-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.card-content h2 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(0, 200, 255, 0.8);
+}
+
+.claim-button {
+    width: 100%;
+    padding: 18px 40px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow:
+        0 10px 30px rgba(0, 114, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.claim-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.claim-button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.claim-button:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        0 15px 40px rgba(0, 114, 255, 0.7),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.claim-link {
+    margin-top: 25px;
+    padding: 15px;
+    background: rgba(0, 200, 255, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 200, 255, 0.3);
+}
+
+.claim-link a {
+    color: #00c6ff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.claim-link a:hover {
+    color: #00e6ff;
+    text-shadow: 0 0 10px rgba(0, 200, 255, 0.8);
+}
+
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 25px;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #00c6ff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 200, 255, 0.8);
+    animation: particleFloat 3s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) translateX(20px);
+        opacity: 0;
+    }
+}
+
+.cursor {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    z-index: 1000;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    opacity: 0;
+}
+
+.cursor.active {
+    opacity: 1;
+}
+
+.cursor svg {
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 768px) {
+    .game-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .folder-content {
+        padding: 20px;
+    }
+
+    .card-content h2 {
+        font-size: 22px;
+    }
+
+    .claim-button {
+        font-size: 16px;
+        padding: 15px 30px;
+    }
+}
